@@ -29,7 +29,11 @@ export class PostService {
   }
 
   addPost(post: Post) {
-    this.posts.push(post);
-    this.observePosts.next([...this.posts]);
+    this.httpClient.post<{ message: string }>(`${environment.nodeUrl}api/posts`, post)
+      .subscribe(postsData => {
+        console.log(postsData);
+        this.posts.push(post);
+        this.observePosts.next([...this.posts]);
+      }, error => console.log(error));
   }
 }
