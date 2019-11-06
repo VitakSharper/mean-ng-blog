@@ -1,6 +1,8 @@
-import {Injectable} from '@angular/core';
+import {Injectable, OnInit} from '@angular/core';
 import {Post} from '../helpers/interfaces';
 import {Observable, Subject} from 'rxjs';
+import {HttpClient} from '@angular/common/http';
+import {environment} from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -10,11 +12,16 @@ export class PostService {
   private posts: Post[] = [];
   private observePosts = new Subject<any>();
 
-  constructor() {
+  constructor(
+    private httpClient: HttpClient
+  ) {
   }
 
-  getPosts(): Post[] {
-    return [...this.posts];
+  getPosts() {
+    this.httpClient.get<{ message: string, posts: Post[] }>(`${environment.nodeUrl}api/posts`).subscribe(data => {
+      this.posts = data.posts;
+      this.observePosts.next([...this.posts]);
+    }, error => console.log(error));
   }
 
   getPostsObserver(): Observable<Post[]> {

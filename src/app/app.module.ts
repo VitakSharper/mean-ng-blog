@@ -8,8 +8,9 @@ import {MaterialModule} from './helpers/material/material.module';
 import {PostCreateComponent} from './posts/post-create/post-create.component';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import { HeaderComponent } from './navigation/header/header.component';
-import { PostListComponent } from './posts/post-list/post-list.component';
+import {HeaderComponent} from './navigation/header/header.component';
+import {PostListComponent} from './posts/post-list/post-list.component';
+import {HttpClientModule} from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { PostListComponent } from './posts/post-list/post-list.component';
     FormsModule,
     ReactiveFormsModule,
     MaterialModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
