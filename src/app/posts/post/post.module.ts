@@ -1,12 +1,32 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
 
+import {PostRoutingModule} from './post-routing.module';
+import {PostCreateComponent} from '../post-create/post-create.component';
+import {PostListComponent} from '../post-list/post-list.component';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {MaterialModule} from '../../helpers/material/material.module';
+import {PostStartComponent} from '../post-start/post-start.component';
 
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    PostStartComponent,
+    PostCreateComponent,
+    PostListComponent
+  ],
   imports: [
-    CommonModule
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MaterialModule,
+    PostRoutingModule,
+  ],
+  exports: [
+    PostStartComponent,
+    PostCreateComponent,
+    PostListComponent
   ]
 })
-export class PostModule { }
+export class PostModule {
+}

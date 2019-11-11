@@ -5,19 +5,16 @@ import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MaterialModule} from './helpers/material/material.module';
-import {PostCreateComponent} from './posts/post-create/post-create.component';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HeaderComponent} from './navigation/header/header.component';
-import {PostListComponent} from './posts/post-list/post-list.component';
 import {HttpClientModule} from '@angular/common/http';
+import {PostModule} from './posts/post/post.module';
 
 @NgModule({
   declarations: [
     AppComponent,
-    PostCreateComponent,
-    HeaderComponent,
-    PostListComponent
+    HeaderComponent
   ],
   imports: [
     BrowserModule,
@@ -27,7 +24,8 @@ import {HttpClientModule} from '@angular/common/http';
     ReactiveFormsModule,
     MaterialModule,
     FlexLayoutModule,
-    HttpClientModule
+    HttpClientModule,
+    PostModule
   ],
   providers: [],
   bootstrap: [AppComponent]

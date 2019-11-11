@@ -37,11 +37,7 @@ export class PostCreateComponent implements OnInit, OnDestroy {
 
   onSubmit() {
     if (this.postForm.valid) {
-      const post: Post = {
-        ...this.postForm.value,
-        id: (this.posts.length + 1).toString()
-      };
-      this.postService.addPost(post);
+      this.postService.addPost(this.postForm.value);
       this.postForm.reset();
     }
   }

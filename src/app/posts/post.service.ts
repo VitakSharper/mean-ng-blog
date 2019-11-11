@@ -3,6 +3,7 @@ import {Post} from '../helpers/interfaces';
 import {Observable, Subject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../environments/environment';
+import {map} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -17,22 +18,45 @@ export class PostService {
   ) {
   }
 
-  getPosts() {
-    this.httpClient.get<{ message: string, posts: Post[] }>(`${environment.nodeUrl}api/posts`).subscribe(data => {
-      this.posts = data.posts;
-      this.observePosts.next([...this.posts]);
-    }, error => console.log(error));
-  }
-
   getPostsObserver(): Observable<Post[]> {
     return this.observePosts.asObservable();
   }
 
+  getPosts() {
+    this.httpClient.get<{ message: string, posts: any }>(`${environment.nodeUrl}posts`)
+      .pipe(
+        map((postData) => {
+          return postData.posts.map(post => {
+            return {
+              id: post._id,
+              title: post.title,
+              content: post.content
+            };
+          });
+        })
+      )
+      .subscribe(posts => {
+        this.posts = posts;
+        this.observePosts.next([...this.posts]);
+      }, error => console.log(error));
+  }
+
   addPost(post: Post) {
-    this.httpClient.post<{ message: string }>(`${environment.nodeUrl}api/posts`, post)
+    this.httpClient.post<{ status: number, post: any }>(`${environment.nodeUrl}posts`, post)
       .subscribe(postsData => {
-        console.log(postsData);
-        this.posts.push(post);
+        const newPost = {
+          id: postsData.post._id,
+          ...post
+        };
+        this.posts.push(newPost);
+        this.observePosts.next([...this.posts]);
+      }, error => console.log(error));
+  }
+
+  deletePostDb(id: string) {
+    this.httpClient.delete(`${environment.nodeUrl}posts/${id}`)
+      .subscribe(() => {
+        this.posts = this.posts.filter(p => p.id !== id);
         this.observePosts.next([...this.posts]);
       }, error => console.log(error));
   }
