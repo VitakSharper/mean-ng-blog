@@ -1,5 +1,5 @@
 const express = require('express');
-const {getPost, getPosts, createPost, delPost} = require('../controlers/postController');
+const {getPost, getPosts, createPost, delPost, updatePost} = require('../controlers/postController');
 
 const router = express.Router();
 
@@ -9,6 +9,7 @@ router.route('/')
 
 router.route('/:id')
   .get(getPost)
+  .patch(updatePost)
   .delete(delPost);
 
 module.exports = router;

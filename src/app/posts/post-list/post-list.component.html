@@ -10,7 +10,10 @@
       </mat-card-content>
       <mat-card-actions>
         <mat-action-row>
-          <button mat-icon-button color="primary" matTooltip="Edit post">
+          <button mat-icon-button color="primary" matTooltip="Edit post"
+                  [routerLink]="['/edit',post.id]"
+                  (click)="onUpdate(post.id)"
+          >
             <mat-icon>edit</mat-icon>
           </button>
           <button mat-icon-button color="warn" matTooltip="Delete post" (click)="onDelPost(post.id)">

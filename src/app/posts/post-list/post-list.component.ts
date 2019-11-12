@@ -12,6 +12,7 @@ export class PostListComponent implements OnInit, OnDestroy {
 
   posts: Post[] = [];
   private postsSub: Subscription;
+  editMode: boolean = false;
 
   constructor(
     private postService: PostService
@@ -24,6 +25,10 @@ export class PostListComponent implements OnInit, OnDestroy {
       .subscribe((posts: Post[]) => {
         this.posts = posts;
       });
+  }
+
+  onUpdate(id: string) {
+    this.postService.editMode = true;
   }
 
   onDelPost(id: string) {

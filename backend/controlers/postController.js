@@ -18,7 +18,7 @@ exports.getPosts = async (req, res) => {
 
 exports.getPost = async (req, res) => {
   try {
-    const post = await Post.findById(req.params.id);
+    const post = await Post.findById(req.params.id).select('-__v');
     res.status(200).json({
       status: 'success',
       post
@@ -36,6 +36,21 @@ exports.createPost = async (req, res) => {
     const post = await Post.create(req.body);
     res.status(201).json({
       status: 201,
+      post
+    });
+  } catch (e) {
+    res.status(400).json({
+      status: 'fail',
+      message: e
+    });
+  }
+};
+
+exports.updatePost = async (req, res) => {
+  try {
+    const post = await Post.findByIdAndUpdate(req.params.id, req.body);
+    res.status(200).json({
+      status: 200,
       post
     });
   } catch (e) {

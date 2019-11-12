@@ -1,4 +1,4 @@
-import {Injectable, OnInit} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Post} from '../helpers/interfaces';
 import {Observable, Subject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
@@ -12,6 +12,7 @@ export class PostService {
 
   private posts: Post[] = [];
   private observePosts = new Subject<any>();
+  editMode: boolean = false;
 
   constructor(
     private httpClient: HttpClient
@@ -41,6 +42,10 @@ export class PostService {
       }, error => console.log(error));
   }
 
+  getPostById(postId: string) {
+    return this.httpClient.get<{ message: string, post: any }>(`${environment.nodeUrl}posts/${postId}`);
+  }
+
   addPost(post: Post) {
     this.httpClient.post<{ status: number, post: any }>(`${environment.nodeUrl}posts`, post)
       .subscribe(postsData => {
@@ -58,6 +63,12 @@ export class PostService {
       .subscribe(() => {
         this.posts = this.posts.filter(p => p.id !== id);
         this.observePosts.next([...this.posts]);
+      }, error => console.log(error));
+  }
+
+  updatePost(editedPost: any, postId) {
+    this.httpClient.patch(`${environment.nodeUrl}posts/${postId}`, editedPost)
+      .subscribe(data => {
       }, error => console.log(error));
   }
 }

@@ -7,6 +7,7 @@ import {PostListComponent} from '../post-list/post-list.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MaterialModule} from '../../helpers/material/material.module';
 import {PostStartComponent} from '../post-start/post-start.component';
+import {FlexModule} from '@angular/flex-layout';
 
 
 @NgModule({
@@ -21,6 +22,7 @@ import {PostStartComponent} from '../post-start/post-start.component';
     ReactiveFormsModule,
     MaterialModule,
     PostRoutingModule,
+    FlexModule,
   ],
   exports: [
     PostStartComponent,

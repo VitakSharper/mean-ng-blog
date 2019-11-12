@@ -1,9 +1,12 @@
 <mat-toolbar class="mat-elevation-z6" color="primary" role="heading">
   <span>MEAN Blog</span>
   <mat-nav-list fxLayout>
-    <a mat-list-item routerLink="/posts">List Posts</a>
-    <a mat-list-item routerLink="/create">Add Post</a>
+    <a mat-list-item routerLink="/posts" routerLinkActive="active-link">List Posts</a>
+    <a mat-list-item routerLink="/create" routerLinkActive="active-link" (click)="onAdd()">Add Post</a>
   </mat-nav-list>
   <span class="fill-remaining-space"></span>
-  <span>Test</span>
+  <mat-nav-list fxLayout>
+    <a mat-list-item routerLinkActive="active-link">Login</a>
+    <a mat-list-item routerLinkActive="active-link">Log Out</a>
+  </mat-nav-list>
 </mat-toolbar>

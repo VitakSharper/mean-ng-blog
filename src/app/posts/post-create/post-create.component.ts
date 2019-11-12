@@ -1,31 +1,38 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {PostService} from '../post.service';
-import {Post} from '../../helpers/interfaces';
-import {Subscription} from 'rxjs';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-post-create',
   templateUrl: './post-create.component.html',
   styleUrls: ['./post-create.component.scss']
 })
-export class PostCreateComponent implements OnInit, OnDestroy {
-  posts: Post[] = [];
-  private postsSub: Subscription;
+export class PostCreateComponent implements OnInit {
   postForm: FormGroup;
+  editedPost: any = null;
 
   constructor(
     private fb: FormBuilder,
-    private postService: PostService) {
+    public postService: PostService,
+    private router: ActivatedRoute
+  ) {
   }
 
   ngOnInit() {
-    this.postService.getPosts();
-    this.postsSub = this.postService.getPostsObserver()
-      .subscribe((posts: Post[]) => {
-        this.posts = posts;
-      });
     this.createPostForm();
+    this.onEdit();
+  }
+
+  private onEdit() {
+    this.router.data.subscribe(data => {
+      if (data.post) {
+        this.postService.editMode = true;
+        this.editedPost = data.post.post;
+        this.postForm.get('title').setValue(data.post.post.title);
+        this.postForm.get('content').setValue(data.post.post.content);
+      }
+    });
   }
 
   private createPostForm() {
@@ -37,12 +44,15 @@ export class PostCreateComponent implements OnInit, OnDestroy {
 
   onSubmit() {
     if (this.postForm.valid) {
-      this.postService.addPost(this.postForm.value);
-      this.postForm.reset();
+      if (this.postService.editMode) {
+        this.postService.updatePost({
+          title: this.postForm.get('title').value,
+          content: this.postForm.get('content').value
+        }, this.editedPost._id);
+      } else {
+        this.postService.addPost(this.postForm.value);
+        this.postForm.reset();
+      }
     }
-  }
-
-  ngOnDestroy(): void {
-    this.postsSub.unsubscribe();
   }
 }
