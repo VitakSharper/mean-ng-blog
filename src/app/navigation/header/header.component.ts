@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {PostService} from '../../posts/post.service';
 
 @Component({
   selector: 'app-header',
@@ -8,13 +7,10 @@ import {PostService} from '../../posts/post.service';
 })
 export class HeaderComponent implements OnInit {
 
-  constructor(private postService: PostService) {
+  constructor() {
   }
 
   ngOnInit() {
   }
 
-  onAdd() {
-    this.postService.editMode = false;
-  }
 }

@@ -11,6 +11,8 @@ import {ActivatedRoute} from '@angular/router';
 export class PostCreateComponent implements OnInit {
   postForm: FormGroup;
   editedPost: any = null;
+  editMode: boolean = false;
+  isLoading: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -27,10 +29,12 @@ export class PostCreateComponent implements OnInit {
   private onEdit() {
     this.router.data.subscribe(data => {
       if (data.post) {
-        this.postService.editMode = true;
+        this.editMode = true;
         this.editedPost = data.post.post;
         this.postForm.get('title').setValue(data.post.post.title);
         this.postForm.get('content').setValue(data.post.post.content);
+      } else {
+        this.editMode = false;
       }
     });
   }
@@ -44,13 +48,16 @@ export class PostCreateComponent implements OnInit {
 
   onSubmit() {
     if (this.postForm.valid) {
-      if (this.postService.editMode) {
+      this.isLoading = true;
+      if (this.editMode) {
         this.postService.updatePost({
           title: this.postForm.get('title').value,
           content: this.postForm.get('content').value
         }, this.editedPost._id);
+        this.isLoading = false;
       } else {
         this.postService.addPost(this.postForm.value);
+        this.isLoading = false;
         this.postForm.reset();
       }
     }

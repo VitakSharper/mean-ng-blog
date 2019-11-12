@@ -20,7 +20,6 @@ const connectDb = async () => {
     console.log('Error connection to the Db !', e)
   }
 };
-
 connectDb();
 
 app.use(bodyParser.json());

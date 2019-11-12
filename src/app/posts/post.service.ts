@@ -4,6 +4,7 @@ import {Observable, Subject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 import {map} from 'rxjs/operators';
+import {Router} from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -12,10 +13,10 @@ export class PostService {
 
   private posts: Post[] = [];
   private observePosts = new Subject<any>();
-  editMode: boolean = false;
 
   constructor(
-    private httpClient: HttpClient
+    private httpClient: HttpClient,
+    private route: Router
   ) {
   }
 
@@ -42,7 +43,7 @@ export class PostService {
       }, error => console.log(error));
   }
 
-  getPostById(postId: string) {
+  getPostById(postId: string): Observable<any> {
     return this.httpClient.get<{ message: string, post: any }>(`${environment.nodeUrl}posts/${postId}`);
   }
 
@@ -55,6 +56,7 @@ export class PostService {
         };
         this.posts.push(newPost);
         this.observePosts.next([...this.posts]);
+        this.route.navigate(['/posts']);
       }, error => console.log(error));
   }
 
