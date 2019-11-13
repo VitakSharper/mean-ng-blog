@@ -2,6 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const postRouter = require('../backend/routers/postRoutes');
+const AppError = require('./utils/appError');
+const globalErrorHandler = require('./controlers/errorController');
 
 const app = express();
 
@@ -34,4 +36,10 @@ app.use((req, res, next) => {
 
 
 app.use('/api/v1/posts', postRouter);
+
+app.all('*', (req, res, next) => {
+  next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404))
+});
+app.use(globalErrorHandler);
+
 module.exports = app;
