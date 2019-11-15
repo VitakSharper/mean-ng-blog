@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {PostService} from '../post.service';
 import {ActivatedRoute} from '@angular/router';
+import {PostsValidators} from '../posts.validators';
 
 @Component({
   selector: 'app-post-create',
@@ -13,6 +14,7 @@ export class PostCreateComponent implements OnInit {
   editedPost: any = null;
   editMode: boolean = false;
   isLoading: boolean = false;
+  imgPreview: string = null;
 
   constructor(
     private fb: FormBuilder,
@@ -26,23 +28,26 @@ export class PostCreateComponent implements OnInit {
     this.onEdit();
   }
 
+  private createPostForm() {
+    this.postForm = this.fb.group({
+      title: [null, [Validators.required, Validators.minLength(6)]],
+      content: [null, [Validators.required, Validators.minLength(6)]],
+      image: [null, [Validators.required], [PostsValidators.mimeType]]
+    });
+  }
+
   private onEdit() {
     this.router.data.subscribe(data => {
       if (data.post) {
         this.editMode = true;
         this.editedPost = data.post.post;
-        this.postForm.get('title').setValue(data.post.post.title);
-        this.postForm.get('content').setValue(data.post.post.content);
+        this.postForm.patchValue({
+          'title': data.post.post.title,
+          'content': data.post.post.content
+        });
       } else {
         this.editMode = false;
       }
-    });
-  }
-
-  private createPostForm() {
-    this.postForm = this.fb.group({
-      title: ['', [Validators.required, Validators.minLength(6)]],
-      content: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
 
@@ -52,14 +57,26 @@ export class PostCreateComponent implements OnInit {
       if (this.editMode) {
         this.postService.updatePost({
           title: this.postForm.get('title').value,
-          content: this.postForm.get('content').value
+          content: this.postForm.get('content').value,
+          updatedAt: Date.now()
         }, this.editedPost._id);
         this.isLoading = false;
       } else {
         this.postService.addPost(this.postForm.value);
-        this.isLoading = false;
         this.postForm.reset();
       }
     }
+  }
+
+  onImgPicked($event: Event) {
+    const image = ($event.target as HTMLInputElement).files[0];
+    this.postForm.patchValue({image});
+    this.postForm.get('image').updateValueAndValidity();
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imgPreview = reader.result as string;
+    };
+    reader.readAsDataURL(image);
+
   }
 }

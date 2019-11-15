@@ -10,6 +10,15 @@ const postSchema = mongoose.Schema({
     type: String,
     require: [true, 'A post must have a content!'],
     trim: true
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now(),
+    select: false
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now()
   }
 });
 

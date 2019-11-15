@@ -9,7 +9,7 @@ const app = express();
 
 app.use(express.json());
 
-const connectDb = async () => {
+const connectDb = (async () => {
   try {
     await mongoose.connect(process.env.DATABASE, {
       useNewUrlParser: true,
@@ -21,8 +21,7 @@ const connectDb = async () => {
   } catch (e) {
     console.log('Error connection to the Db !', e)
   }
-};
-connectDb();
+})();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));

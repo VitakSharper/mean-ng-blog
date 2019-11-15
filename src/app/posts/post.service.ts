@@ -31,8 +31,7 @@ export class PostService {
           return postData.posts.map(post => {
             return {
               id: post._id,
-              title: post.title,
-              content: post.content
+              ...post
             };
           });
         })
@@ -47,16 +46,25 @@ export class PostService {
     return this.httpClient.get<{ message: string, post: any }>(`${environment.nodeUrl}posts/${postId}`);
   }
 
-  addPost(post: Post) {
-    this.httpClient.post<{ status: number, post: any }>(`${environment.nodeUrl}posts`, post)
+  addPost(post: any) {
+    const postData = new FormData();
+    postData.append('title', post.title);
+    postData.append('content', post.content);
+    postData.append('image', post.image, post.title);
+
+    this.httpClient.post<{ status: number, post: any }>(`${environment.nodeUrl}posts`, postData)
       .subscribe(postsData => {
         const newPost = {
           id: postsData.post._id,
-          ...post
+          title: post.title,
+          content: post.content,
+          updatedAt: Date.now().toString()
         };
         this.posts.push(newPost);
         this.observePosts.next([...this.posts]);
-        this.route.navigate(['/posts']);
+        setTimeout(() => {
+          this.route.navigate(['/posts']);
+        }, 1000);
       }, error => console.log(error));
   }
 

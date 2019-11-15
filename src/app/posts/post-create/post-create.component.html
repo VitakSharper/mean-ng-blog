@@ -1,6 +1,6 @@
 <mat-card>
   <mat-spinner *ngIf="isLoading"></mat-spinner>
-  <form [formGroup]="postForm" (ngSubmit)="onSubmit()">
+  <form [formGroup]="postForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading">
     <mat-card-content>
       <mat-form-field>
         <input matInput type="text" placeholder="Title here" formControlName="title">
@@ -16,9 +16,42 @@
       <mat-form-field>
         <textarea matInput type="text" placeholder="Post text here" formControlName="content"></textarea>
       </mat-form-field>
+
+      <mat-card
+        style="margin-bottom: 10px"
+        *ngIf="imgPreview&&postForm.get('image').valid">
+        <img
+          mat-card-image
+          [src]="imgPreview"
+          [alt]="postForm.get('title').value||'empty'">
+        <mat-card-actions>
+          <button style="color: red" mat-icon-button matTooltip="Delete image">
+            <mat-icon>delete</mat-icon>
+          </button>
+          <button mat-icon-button>
+            <mat-icon>share</mat-icon>
+          </button>
+        </mat-card-actions>
+      </mat-card>
+
+      <div>
+        <button
+          mat-stroked-button
+          type="button"
+          matTooltip="Select an image"
+          (click)="imgPicker.click()">Pick Image
+        </button>
+        <input type="file" #imgPicker (change)="onImgPicked($event)">
+      </div>
+
     </mat-card-content>
     <mat-card-actions>
-      <button mat-raised-button type="submit" color="primary" [disabled]="postForm.invalid" matTooltip="Submit a Post">
+      <button
+        mat-raised-button
+        type="submit"
+        color="primary"
+        [disabled]="postForm.invalid"
+        matTooltip="Submit a Post">
         {{this.editMode ? 'Update Post' : 'Save Post'}}
       </button>
     </mat-card-actions>

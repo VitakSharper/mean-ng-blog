@@ -3,7 +3,7 @@ const catchAsync = require('../utils/catchAsync');
 
 // Route Handlers
 exports.getPosts = catchAsync(async (req, res) => {
-  const posts = await Post.find().select('-__v');
+  const posts = await Post.find().sort('-updatedAt').select('-__v');
   res.status(200).json({
     status: 'success',
     results: posts.length,
