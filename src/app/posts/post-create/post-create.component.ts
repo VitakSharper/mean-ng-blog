@@ -43,7 +43,8 @@ export class PostCreateComponent implements OnInit {
         this.editedPost = data.post.post;
         this.postForm.patchValue({
           'title': data.post.post.title,
-          'content': data.post.post.content
+          'content': data.post.post.content,
+          'image': data.post.post.imagePath
         });
       } else {
         this.editMode = false;
@@ -52,19 +53,16 @@ export class PostCreateComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.postForm.valid) {
-      this.isLoading = true;
-      if (this.editMode) {
-        this.postService.updatePost({
-          title: this.postForm.get('title').value,
-          content: this.postForm.get('content').value,
-          updatedAt: Date.now()
-        }, this.editedPost._id);
-        this.isLoading = false;
-      } else {
-        this.postService.addPost(this.postForm.value);
-        this.postForm.reset();
-      }
+    if (this.postForm.invalid) {
+      return;
+    }
+    this.isLoading = true;
+    if (this.editMode) {
+      this.postService.updatePost(this.postForm.value, this.editedPost._id);
+      this.isLoading = false;
+    } else {
+      this.postService.addPost(this.postForm.value);
+      this.postForm.reset();
     }
   }
 
@@ -77,6 +75,5 @@ export class PostCreateComponent implements OnInit {
       this.imgPreview = reader.result as string;
     };
     reader.readAsDataURL(image);
-
   }
 }

@@ -47,18 +47,13 @@ export class PostService {
   }
 
   addPost(post: any) {
-    const postData = new FormData();
-    postData.append('title', post.title);
-    postData.append('content', post.content);
-    postData.append('image', post.image, post.title);
-
-    this.httpClient.post<{ status: number, post: any }>(`${environment.nodeUrl}posts`, postData)
+    this.httpClient.post<{ status: number, post: any }>(`${environment.nodeUrl}posts`, this.checkPostData(post))
       .subscribe(postsData => {
         const newPost = {
           id: postsData.post._id,
           title: post.title,
           content: post.content,
-          updatedAt: Date.now().toString()
+          imagePath: postsData.post.imagePath
         };
         this.posts.push(newPost);
         this.observePosts.next([...this.posts]);
@@ -68,17 +63,34 @@ export class PostService {
       }, error => console.log(error));
   }
 
+  updatePost(editedPost: any, postId) {
+    this.httpClient.patch(`${environment.nodeUrl}posts/${postId}`, this.checkPostData(editedPost, postId))
+      .subscribe(data => {
+      }, error => console.log(error));
+  }
+
+  checkPostData(post: any, postId?: string): FormData | string {
+    let postData: any | FormData;
+
+    if (typeof post.image === 'object') {
+      postData = new FormData();
+      postData.append('title', post.title);
+      postData.append('content', post.content);
+      postData.append('image', post.image, post.title);
+    } else {
+      postData = {
+        id: postId,
+        ...post
+      };
+    }
+    return postData;
+  }
+
   deletePostDb(id: string) {
     this.httpClient.delete(`${environment.nodeUrl}posts/${id}`)
       .subscribe(() => {
         this.posts = this.posts.filter(p => p.id !== id);
         this.observePosts.next([...this.posts]);
-      }, error => console.log(error));
-  }
-
-  updatePost(editedPost: any, postId) {
-    this.httpClient.patch(`${environment.nodeUrl}posts/${postId}`, editedPost)
-      .subscribe(data => {
       }, error => console.log(error));
   }
 }

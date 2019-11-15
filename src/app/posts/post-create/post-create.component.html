@@ -14,15 +14,16 @@
         </mat-error>
       </mat-form-field>
       <mat-form-field>
-        <textarea matInput type="text" placeholder="Post text here" formControlName="content"></textarea>
+        <textarea matInput matTextareaAutosize type="text" placeholder="Post text here"
+                  formControlName="content"></textarea>
       </mat-form-field>
 
       <mat-card
         style="margin-bottom: 10px"
-        *ngIf="imgPreview&&postForm.get('image').valid">
+        *ngIf="imgPreview&&postForm.get('image').valid||editMode">
         <img
           mat-card-image
-          [src]="imgPreview"
+          [src]="imgPreview||editedPost.imagePath"
           [alt]="postForm.get('title').value||'empty'">
         <mat-card-actions>
           <button style="color: red" mat-icon-button matTooltip="Delete image">

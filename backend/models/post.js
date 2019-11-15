@@ -11,6 +11,11 @@ const postSchema = mongoose.Schema({
     require: [true, 'A post must have a content!'],
     trim: true
   },
+  imagePath: {
+    type: String,
+    require: [true, 'A post must have a image'],
+    trim: true
+  },
   createdAt: {
     type: Date,
     default: Date.now(),

@@ -20,7 +20,8 @@ exports.getPost = catchAsync(async (req, res) => {
 });
 
 exports.createPost = catchAsync(async (req, res) => {
-  const post = await Post.create(req.body);
+  const imgUrl = `${req.protocol}://${req.get('host')}`;
+  const post = await Post.create({...req.body, imagePath: `${imgUrl}/images/${req.file.filename}`});
   res.status(201).json({
     status: 201,
     post
@@ -28,7 +29,17 @@ exports.createPost = catchAsync(async (req, res) => {
 });
 
 exports.updatePost = catchAsync(async (req, res) => {
-  const post = await Post.findByIdAndUpdate(req.params.id, req.body);
+  let imagePath;
+  if (req.file) {
+    const imgUrl = `${req.protocol}://${req.get('host')}`;
+    imagePath = `${imgUrl}/images/${req.file.filename}`;
+  } else {
+    imagePath = req.body.image;
+  }
+  const post = await Post.findByIdAndUpdate(req.params.id, {
+    ...req.body,
+    imagePath
+  });
   res.status(200).json({
     status: 200,
     post

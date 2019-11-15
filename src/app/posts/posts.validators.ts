@@ -5,8 +5,11 @@ export class PostsValidators {
 
   static mimeType(control: FormControl): Observable<{ [key: string]: boolean }> | Promise<{ [key: string]: boolean }> {
 
-    if (typeof (control.value) === 'string' || +(control.value.size / 1024).toFixed(2) > 2048) {
-      console.log('EXIT');
+    if (+(control.value.size / 1024).toFixed(2) > 2048) {
+      return of({invalidMimeType: true});
+    }
+
+    if (typeof (control.value) === 'string') {
       return of(null);
     }
 
@@ -17,7 +20,6 @@ export class PostsValidators {
       fileReader.addEventListener('loadend', () => {
         const arr = new Uint8Array(fileReader.result as Uint8Array).subarray(0, 4);
         const header = arr.reduce((acc, value) => acc + value.toString(16), '');
-        console.log('Validator: ', header);
         let isValid = false;
         switch (header) {
           case '89504e47':
