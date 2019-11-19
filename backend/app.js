@@ -3,6 +3,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const postRouter = require('../backend/routers/postRoutes');
+const userRouter = require('../backend/routers/userRoutes');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controlers/errorController');
 
@@ -10,7 +11,7 @@ const app = express();
 
 app.use(express.json());
 
-const connectDb = (async () => {
+(async () => {
   try {
     await mongoose.connect(process.env.DATABASE, {
       useNewUrlParser: true,
@@ -18,9 +19,10 @@ const connectDb = (async () => {
       useFindAndModify: false,
       useUnifiedTopology: true
     });
-    console.log('Connected to Db')
+    console.log('Connected to Db (❁´◡`❁) (●\'◡\'●)'
+    )
   } catch (e) {
-    console.log('Error connection to the Db !', e)
+    console.log('Error connection to the Db ༼ つ ◕_◕ ༽つ !', e)
   }
 })();
 
@@ -38,6 +40,7 @@ app.use((req, res, next) => {
 
 
 app.use('/api/v1/posts', postRouter);
+app.use('/api/v1/users', userRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404))

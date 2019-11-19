@@ -12,8 +12,8 @@ import {PostsValidators} from '../posts.validators';
 export class PostCreateComponent implements OnInit {
   postForm: FormGroup;
   editedPost: any = null;
-  editMode: boolean = false;
-  isLoading: boolean = false;
+  editMode = false;
+  isLoading = false;
   imgPreview: string = null;
 
   constructor(
@@ -24,11 +24,11 @@ export class PostCreateComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.createPostForm();
+    this.createForm();
     this.onEdit();
   }
 
-  private createPostForm() {
+  private createForm() {
     this.postForm = this.fb.group({
       title: [null, [Validators.required, Validators.minLength(6)]],
       content: [null, [Validators.required, Validators.minLength(6)]],
@@ -42,9 +42,9 @@ export class PostCreateComponent implements OnInit {
         this.editMode = true;
         this.editedPost = data.post.post;
         this.postForm.patchValue({
-          'title': data.post.post.title,
-          'content': data.post.post.content,
-          'image': data.post.post.imagePath
+          title: data.post.post.title,
+          content: data.post.post.content,
+          image: data.post.post.imagePath
         });
       } else {
         this.editMode = false;

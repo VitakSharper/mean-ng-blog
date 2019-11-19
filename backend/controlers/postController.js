@@ -9,7 +9,7 @@ exports.getPosts = catchAsync(async (req, res) => {
     .sort();
 
   const posts = await features.queryDb;
-  const postCount = await Post.count();
+  const postCount = await Post.countDocuments();
   // const posts = await Post.find().sort('-updatedAt').select('-__v');
   res.status(200).json({
     status: 'success',

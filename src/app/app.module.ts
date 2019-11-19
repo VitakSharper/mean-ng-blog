@@ -10,6 +10,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HeaderComponent} from './navigation/header/header.component';
 import {HttpClientModule} from '@angular/common/http';
 import {PostModule} from './posts/post/post.module';
+import {AuthModule} from './auth/auth/auth.module';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import {PostModule} from './posts/post/post.module';
     MaterialModule,
     FlexLayoutModule,
     HttpClientModule,
-    PostModule
+    PostModule,
+    AuthModule
   ],
   providers: [],
   bootstrap: [AppComponent]
