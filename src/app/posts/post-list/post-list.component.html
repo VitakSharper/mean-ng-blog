@@ -1,9 +1,14 @@
-<mat-spinner *ngIf="isLoading"></mat-spinner>
 <mat-accordion *ngIf="posts.length>0&&!isLoading; else noPosts">
   <mat-expansion-panel
     *ngFor="let post of posts">
     <mat-expansion-panel-header>
       <p>{{post.title}}</p>
+      <mat-chip-list>
+        <mat-chip
+          style="margin: 1rem"
+          matTooltip="Last update">
+          {{post.updatedAt|date:'medium'}}</mat-chip>
+      </mat-chip-list>
     </mat-expansion-panel-header>
     <mat-card tabindex="0">
       <mat-card-content>
@@ -48,17 +53,22 @@
         </mat-action-row>
       </mat-card-actions>
       <mat-card-footer>
-        <mat-chip-list>
-          <mat-chip
-            style="margin-left: 1rem"
-            matTooltip="Last update">
-            {{post.updatedAt|date:'medium'}}</mat-chip>
-        </mat-chip-list>
+
       </mat-card-footer>
     </mat-card>
   </mat-expansion-panel>
 </mat-accordion>
-
+<mat-card class="matPaginator">
+  <mat-card-actions>
+    <mat-paginator
+      [length]="totalPosts"
+      [pageSize]="postsPerPage"
+      [pageSizeOptions]="pageSizeOptions"
+      (page)="onChangePage($event)"
+    ></mat-paginator>
+  </mat-card-actions>
+</mat-card>
+<mat-spinner *ngIf="isLoading"></mat-spinner>
 <ng-template #noPosts>
   <mat-card>
     <mat-card-content fxLayout fxLayoutAlign="center">

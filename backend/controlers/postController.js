@@ -1,12 +1,19 @@
 const Post = require('../models/post');
 const catchAsync = require('../utils/catchAsync');
+const APIFeatures = require('./APIFeatures');
 
 // Route Handlers
 exports.getPosts = catchAsync(async (req, res) => {
-  const posts = await Post.find().sort('-updatedAt').select('-__v');
+  const features = new APIFeatures(Post.find(), req.query)
+    .paginate()
+    .sort();
+
+  const posts = await features.queryDb;
+  const postCount = await Post.count();
+  // const posts = await Post.find().sort('-updatedAt').select('-__v');
   res.status(200).json({
     status: 'success',
-    results: posts.length,
+    results: postCount,
     posts
   });
 });

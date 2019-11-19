@@ -12,7 +12,7 @@ import {Router} from '@angular/router';
 export class PostService {
 
   private posts: Post[] = [];
-  private observePosts = new Subject<any>();
+  private observePosts = new Subject<{ posts: any, maxPosts: number }>();
 
   constructor(
     private httpClient: HttpClient,
@@ -20,25 +20,28 @@ export class PostService {
   ) {
   }
 
-  getPostsObserver(): Observable<Post[]> {
+  getPostsObserver(): Observable<{ posts: any, maxPosts?: number }> {
     return this.observePosts.asObservable();
   }
 
-  getPosts() {
-    this.httpClient.get<{ message: string, posts: any }>(`${environment.nodeUrl}posts`)
+  getPosts(page: number, limit: number) {
+    this.httpClient.get<{ results: number, posts: any }>(
+      `${environment.nodeUrl}posts/?page=${page}&limit=${limit}`)
       .pipe(
         map((postData) => {
-          return postData.posts.map(post => {
-            return {
-              id: post._id,
-              ...post
-            };
-          });
+          return {
+            posts: postData.posts.map(post => {
+              return {
+                id: post._id,
+                ...post
+              };
+            }), maxPosts: postData.results
+          };
         })
       )
       .subscribe(posts => {
-        this.posts = posts;
-        this.observePosts.next([...this.posts]);
+        this.posts = posts.posts;
+        this.observePosts.next({posts: [...this.posts], maxPosts: posts.maxPosts});
       }, error => console.log(error));
   }
 
@@ -48,18 +51,8 @@ export class PostService {
 
   addPost(post: any) {
     this.httpClient.post<{ status: number, post: any }>(`${environment.nodeUrl}posts`, this.checkPostData(post))
-      .subscribe(postsData => {
-        const newPost = {
-          id: postsData.post._id,
-          title: post.title,
-          content: post.content,
-          imagePath: postsData.post.imagePath
-        };
-        this.posts.push(newPost);
-        this.observePosts.next([...this.posts]);
-        setTimeout(() => {
-          this.route.navigate(['/posts']);
-        }, 1000);
+      .subscribe(() => {
+        this.route.navigate(['/posts']);
       }, error => console.log(error));
   }
 
@@ -86,11 +79,7 @@ export class PostService {
     return postData;
   }
 
-  deletePostDb(id: string) {
-    this.httpClient.delete(`${environment.nodeUrl}posts/${id}`)
-      .subscribe(() => {
-        this.posts = this.posts.filter(p => p.id !== id);
-        this.observePosts.next([...this.posts]);
-      }, error => console.log(error));
+  deletePostDb(id: string): Observable<any> {
+    return this.httpClient.delete(`${environment.nodeUrl}posts/${id}`);
   }
 }
