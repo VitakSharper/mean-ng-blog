@@ -45,7 +45,8 @@ exports.updatePost = catchAsync(async (req, res) => {
   }
   const post = await Post.findByIdAndUpdate(req.params.id, {
     ...req.body,
-    imagePath
+    imagePath,
+    updatedAt: Date.now()
   });
   res.status(200).json({
     status: 200,
