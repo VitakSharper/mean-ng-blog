@@ -5,3 +5,11 @@ export interface Post {
   content: string;
   updatedAt?: string;
 }
+
+export interface User {
+  name: string;
+  email: string;
+  password?: string;
+  passwordConfirm?: string;
+  token?: string;
+}

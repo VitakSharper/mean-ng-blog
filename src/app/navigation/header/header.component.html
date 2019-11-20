@@ -4,14 +4,25 @@
     <a mat-list-item routerLink="/posts" routerLinkActive="active-link" matTooltip="List all Posts">
       <mat-icon>list</mat-icon>
     </a>
-    <a mat-list-item routerLink="/create" routerLinkActive="active-link" matTooltip="Add a Post">
+    <a mat-list-item routerLink="/create" routerLinkActive="active-link" matTooltip="Add a Post"
+       *ngIf="authService.currentUser">
       <mat-icon>add</mat-icon>
     </a>
   </mat-nav-list>
   <span class="fill-remaining-space"></span>
-  <mat-nav-list fxLayout>
+
+  <mat-nav-list fxLayout *ngIf="!authService.currentUser">
     <a mat-list-item routerLinkActive="active-link" routerLink="/signup">Sigup</a>
     <a mat-list-item routerLinkActive="active-link" routerLink="/login">Login</a>
-    <a mat-list-item routerLinkActive="active-link">Log Out</a>
+  </mat-nav-list>
+
+  <mat-nav-list *ngIf="authService.currentUser">
+    <a mat-list-item routerLinkActive="active-link" style="color: #D1C4E9;margin-right: 1rem" (click)="onLogout()"
+       matTooltip="Click here to Logout"
+       fxLayout="column"
+    >
+      <span>Welcome (●'◡'●) : </span>
+      <span><strong>{{authService.currentUser.email}}</strong></span>
+    </a>
   </mat-nav-list>
 </mat-toolbar>

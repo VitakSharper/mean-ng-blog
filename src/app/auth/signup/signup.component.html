@@ -1,1 +1,63 @@
-<p>signup works!</p>
+<mat-card style="background-color: #E8EAF6">
+  <mat-card-header fxLayout fxLayoutAlign="center">
+    <mat-card-title>
+      <mat-icon>edit</mat-icon>
+    </mat-card-title>
+  </mat-card-header>
+  <form
+    [formGroup]="signupForm"
+    (ngSubmit)="submitHandler()">
+    <!--                                            Name-->
+    <div class="signup-border">
+      <mat-form-field>
+        <input matInput type="text" placeholder="Tell us you name" formControlName="name">
+        <mat-error
+          *ngIf="signupForm.get('name').hasError('required')&&signupForm.get('name').touched"
+        >Please provide a name.
+        </mat-error>
+      </mat-form-field>
+      <!--                                           E-MAIL-->
+      <mat-form-field>
+        <input matInput type="email" placeholder="Provide you E-mail" formControlName="email">
+        <mat-error
+          *ngIf="signupForm.get('email').hasError('required')&&signupForm.get('email').touched"
+        >Please provide you email.
+        </mat-error>
+        <mat-error
+          *ngIf="signupForm.get('email').hasError('email')&&signupForm.get('email').touched"
+        >Please provide a valid email.
+        </mat-error>
+      </mat-form-field>
+      <!--                                           PASSWORD-->
+      <mat-form-field>
+        <input matInput type="password" placeholder="Provide a Password" formControlName="password">
+        <mat-error
+          *ngIf="signupForm.get('password').hasError('required')&&signupForm.get('password').touched"
+        >Please provide a password.
+        </mat-error>
+        <mat-error
+          *ngIf="signupForm.get('password').hasError('minlength')&&signupForm.get('password').touched"
+        >The password must have at least 8 characters.
+        </mat-error>
+      </mat-form-field>
+      <!--                                          CONFIRM PASSWORD          -->
+      <mat-form-field>
+        <input matInput type="password" placeholder="Confirm you Password" formControlName="passwordConfirm">
+        <mat-error
+          *ngIf="signupForm.get('passwordConfirm').hasError('required')&&signupForm.get('passwordConfirm').touched"
+        >Please provide a password.
+        </mat-error>
+        <mat-error
+          *ngIf="signupForm.get('passwordConfirm').hasError('minlength')&&signupForm.get('passwordConfirm').touched"
+        >The password must have at least 8 characters.
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <mat-card-actions fxLayout fxLayoutAlign="center">
+      <button mat-stroked-button color="primary" type="submit" matTooltip="SignUp" [disabled]="signupForm.invalid">
+        SignUp
+      </button>
+      <button mat-stroked-button color="warn" type="button" matTooltip="Cancel">Cancel</button>
+    </mat-card-actions>
+  </form>
+</mat-card>

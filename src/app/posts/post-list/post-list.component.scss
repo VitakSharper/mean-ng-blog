@@ -7,11 +7,13 @@ mat-spinner {
   margin: auto;
 }
 
-//mat-card > mat-card-content {
-//  border: 1px solid #E3F2FD;
-//  margin: 0 25px 0 25px;
-//}
-
 .matPaginator {
   margin-top: 5px;
+  background-color: #E3F2FD;
+}
+
+.posts-border {
+  border: 3px solid #C5CAE9;
+  border-radius: 5px;
+  padding: 18px 25px 25px 20px;
 }

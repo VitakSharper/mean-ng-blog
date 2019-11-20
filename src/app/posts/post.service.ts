@@ -5,6 +5,7 @@ import {HttpClient} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 import {map} from 'rxjs/operators';
 import {Router} from '@angular/router';
+import {SnackbarService} from '../helpers/snackbar.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,8 @@ export class PostService {
 
   constructor(
     private httpClient: HttpClient,
-    private route: Router
+    private route: Router,
+    private snackbar: SnackbarService
   ) {
   }
 
@@ -53,7 +55,7 @@ export class PostService {
     this.httpClient.post<{ status: number, post: any }>(`${environment.nodeUrl}posts`, this.checkPostData(post))
       .subscribe(() => {
         this.route.navigate(['/posts']);
-      }, error => console.log(error));
+      }, error => this.snackbar.showSnack(error.error.message, null));
   }
 
   updatePost(editedPost: any, postId) {

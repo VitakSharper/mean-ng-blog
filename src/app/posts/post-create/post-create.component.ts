@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {PostService} from '../post.service';
 import {ActivatedRoute} from '@angular/router';
 import {PostsValidators} from '../posts.validators';
+import {SnackbarService} from '../../helpers/snackbar.service';
 
 @Component({
   selector: 'app-post-create',
@@ -19,7 +20,8 @@ export class PostCreateComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     public postService: PostService,
-    private router: ActivatedRoute
+    private router: ActivatedRoute,
+    private snackbar: SnackbarService
   ) {
   }
 
@@ -60,8 +62,10 @@ export class PostCreateComponent implements OnInit {
     if (this.editMode) {
       this.postService.updatePost(this.postForm.value, this.editedPost._id);
       this.isLoading = false;
+      this.snackbar.showSnack(`Your post ${this.postForm.get('title').value} was successful updated (●'◡'●)`, null);
     } else {
       this.postService.addPost(this.postForm.value);
+      this.snackbar.showSnack(`Your post ${this.postForm.get('title').value} was successful created (●'◡'●)`, null);
       this.postForm.reset();
     }
   }

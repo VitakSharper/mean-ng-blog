@@ -3,6 +3,7 @@ import {Post} from '../../helpers/interfaces';
 import {PostService} from '../post.service';
 import {Subscription} from 'rxjs';
 import {PageEvent} from '@angular/material';
+import {AuthService} from '../../auth/auth.service';
 
 @Component({
   selector: 'app-post-list',
@@ -17,12 +18,13 @@ export class PostListComponent implements OnInit, OnDestroy {
   isLoading: boolean = false;
 
   totalPosts: number = 0;
-  postsPerPage = 2;
-  pageSizeOptions = [1, 2, 5, 10];
+  postsPerPage = 5;
+  pageSizeOptions = [5, 10, 20];
   pageIndex = 1;
 
   constructor(
-    private postService: PostService
+    private postService: PostService,
+    public authService: AuthService
   ) {
   }
 

@@ -1,0 +1,22 @@
+mat-card {
+  max-width: 300px;
+  margin: auto;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+mat-card-title > mat-icon {
+  border: 2px solid #673AB7;
+  color: #673AB7;
+  border-radius: 50%;
+  margin: 0 25px 0 25px;
+  padding: 5px;
+}
+
+.signup-border {
+  border: 3px solid #C5CAE9;
+  border-radius: 5px;
+  padding: 18px 25px 25px 20px;
+}

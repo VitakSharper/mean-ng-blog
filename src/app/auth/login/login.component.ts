@@ -1,5 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AuthService} from '../auth.service';
+import {SnackbarService} from '../../helpers/snackbar.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -10,7 +13,10 @@ export class LoginComponent implements OnInit {
   loginForm: FormGroup;
 
   constructor(
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private snackbar: SnackbarService,
+    private route: Router
   ) {
   }
 
@@ -19,7 +25,15 @@ export class LoginComponent implements OnInit {
   }
 
   submitHandler() {
-    console.log(this.loginForm.value);
+    if (this.loginForm.invalid) {
+      return;
+    }
+    this.authService.logIn(this.loginForm.value)
+      .subscribe(userData => {
+        this.authService.fetchLoggedUser(userData);
+        this.route.navigate(['/']);
+        this.snackbar.showSnack(`Welcome ${this.authService.currentUser.email}, you are now logged in. (●'◡'●)`, null);
+      }, error => this.snackbar.showSnack(error.error.message, null, {duration: 5000}));
   }
 
   private createForm() {
