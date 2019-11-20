@@ -14,3 +14,9 @@ mat-form-field, textarea {
 input[type="file"] {
   visibility: hidden;
 }
+
+.create-border {
+  border: 3px solid #C5CAE9;
+  border-radius: 5px;
+  padding: 18px 25px 25px 20px;
+}

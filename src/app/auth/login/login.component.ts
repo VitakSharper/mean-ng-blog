@@ -29,11 +29,13 @@ export class LoginComponent implements OnInit {
       return;
     }
     this.authService.logIn(this.loginForm.value)
-      .subscribe(userData => {
-        this.authService.fetchLoggedUser(userData);
-        this.route.navigate(['/']);
-        this.snackbar.showSnack(`Welcome ${this.authService.currentUser.email}, you are now logged in. (●'◡'●)`, null);
-      }, error => this.snackbar.showSnack(error.error.message, null, {duration: 5000}));
+    // TODO ADD SPINNER ON THE LOGIN BUTTON
+      .subscribe(() => {
+        this.authService.getIsAuth().next({isAuth: true, user: this.authService.getCurrentUser().email});
+        this.authService.saveAuthToLocalstorage();
+        this.route.navigate(['/posts']);
+        this.snackbar.showSnack(`Welcome ${this.authService.getCurrentUser().email}, you are now logged in. (●'◡'●)`, null);
+      }, error => this.snackbar.showSnack(error.error === undefined ? error : error.error.message, null, {duration: 5000}));
   }
 
   private createForm() {

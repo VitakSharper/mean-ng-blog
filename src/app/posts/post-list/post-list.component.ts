@@ -14,21 +14,28 @@ export class PostListComponent implements OnInit, OnDestroy {
 
   posts: Post[] = [];
   private postsSub: Subscription;
-  editMode: boolean = false;
-  isLoading: boolean = false;
+  private isAuthSub: Subscription;
+  isLoading = false;
+  isAuth = false;
 
-  totalPosts: number = 0;
+  totalPosts = 0;
   postsPerPage = 5;
   pageSizeOptions = [5, 10, 20];
   pageIndex = 1;
 
   constructor(
     private postService: PostService,
-    public authService: AuthService
+    private authService: AuthService
   ) {
   }
 
   ngOnInit() {
+    this.isAuth = !!this.authService.getToken();
+    this.isAuthSub = this.authService.getIsAuth()
+      .subscribe((data) => {
+        this.isAuth = data.isAuth;
+      }, error => console.log(error));
+
     this.isLoading = true;
     this.getPosts();
     this.postsSub = this.postService.getPostsObserver()
@@ -40,6 +47,7 @@ export class PostListComponent implements OnInit, OnDestroy {
         console.log(error);
         this.isLoading = false;
       });
+
   }
 
   getPosts() {
@@ -57,10 +65,10 @@ export class PostListComponent implements OnInit, OnDestroy {
     this.pageIndex = $event.pageIndex + 1;
     this.postsPerPage = $event.pageSize;
     this.getPosts();
-    //this.isLoading = false;
   }
 
   ngOnDestroy(): void {
     this.postsSub.unsubscribe();
+    this.isAuthSub.unsubscribe();
   }
 }

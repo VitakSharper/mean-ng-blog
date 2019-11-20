@@ -1,7 +1,12 @@
-<mat-card>
+<mat-card style="background-color: #E8EAF6">
   <mat-spinner *ngIf="isLoading"></mat-spinner>
+  <mat-card-header fxLayout fxLayoutAlign="center">
+    <mat-card-title>
+      {{this.editMode ? 'Update Post' : 'Add A Post' }}
+    </mat-card-title>
+  </mat-card-header>
   <form [formGroup]="postForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading">
-    <mat-card-content>
+    <mat-card-content class="create-border">
       <mat-form-field>
         <input matInput type="text" placeholder="Title here" formControlName="title">
         <mat-error
