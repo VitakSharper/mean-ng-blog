@@ -4,14 +4,16 @@ import {User} from '../helpers/interfaces';
 import {environment} from '../../environments/environment';
 import {Observable, Subject} from 'rxjs';
 import {map} from 'rxjs/operators';
+import {JwtHelperService} from '@auth0/angular-jwt';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  urlDb = `${environment.nodeUrl}users`;
+  urlDb = `${environment.apiUrl}users`;
   private currentUser: User = null;
   private token = null;
+  helper = new JwtHelperService();
 
   private isAuth = new Subject<{ isAuth: boolean, user: string }>();
 
@@ -25,7 +27,13 @@ export class AuthService {
   }
 
   getToken(): string {
+    const decodedToken = this.helper.decodeToken(this.token);
+    const expirationDate = this.helper.getTokenExpirationDate(this.token);
     return this.token;
+  }
+
+  isTokenExpired() {
+    return !this.helper.isTokenExpired(this.token);
   }
 
   setToken(value: string) {
@@ -66,7 +74,8 @@ export class AuthService {
         }));
   }
 
-  resetCurrentUser() {
+  resetConnexion() {
+    console.log('in reset connexion');
     this.currentUser = null;
     this.token = null;
     this.getIsAuth().next({isAuth: false, user: null});

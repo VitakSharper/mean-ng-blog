@@ -1,9 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {PostService} from '../post.service';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {PostsValidators} from '../posts.validators';
 import {SnackbarService} from '../../helpers/snackbar.service';
+import {AuthService} from '../../auth/auth.service';
 
 @Component({
   selector: 'app-post-create',
@@ -21,7 +22,9 @@ export class PostCreateComponent implements OnInit {
     private fb: FormBuilder,
     public postService: PostService,
     private router: ActivatedRoute,
-    private snackbar: SnackbarService
+    private snackbar: SnackbarService,
+    private authService: AuthService,
+    private route: Router
   ) {
   }
 
@@ -57,6 +60,10 @@ export class PostCreateComponent implements OnInit {
   onSubmit() {
     if (this.postForm.invalid) {
       return;
+    }
+    if (!this.authService.isTokenExpired()) {
+      this.authService.resetConnexion();
+      this.route.navigate(['/login']);
     }
     this.isLoading = true;
     if (this.editMode) {

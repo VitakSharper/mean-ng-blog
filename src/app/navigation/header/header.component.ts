@@ -33,8 +33,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   onLogout() {
-    this.authService.resetCurrentUser();
-    this.router.navigate(['/']);
+    this.authService.resetConnexion();
+    this.router.navigate(['/login']);
   }
 
   ngOnDestroy(): void {

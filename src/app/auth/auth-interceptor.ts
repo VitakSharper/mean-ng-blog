@@ -1,3 +1,4 @@
+// Deprecated using @auth0/angular-jwt instead, implementing it in app.module.ts
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {AuthService} from './auth.service';

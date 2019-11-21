@@ -16,9 +16,10 @@ export class PostGuard implements CanActivate {
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    if (!(!!this.authService.getToken())) {
+    if (!this.authService.isTokenExpired()) {
+      this.authService.resetConnexion();
       this.router.navigate(['/login']);
     }
-    return !!this.authService.getToken();
+    return this.authService.isTokenExpired();
   }
 }

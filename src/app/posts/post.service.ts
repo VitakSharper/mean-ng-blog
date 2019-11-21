@@ -28,7 +28,7 @@ export class PostService {
 
   getPosts(page: number, limit: number) {
     this.httpClient.get<{ results: number, posts: any }>(
-      `${environment.nodeUrl}posts/?page=${page}&limit=${limit}`)
+      `${environment.apiUrl}posts/?page=${page}&limit=${limit}`)
       .pipe(
         map((postData) => {
           return {
@@ -48,18 +48,18 @@ export class PostService {
   }
 
   getPostById(postId: string): Observable<any> {
-    return this.httpClient.get<{ message: string, post: any }>(`${environment.nodeUrl}posts/${postId}`);
+    return this.httpClient.get<{ message: string, post: any }>(`${environment.apiUrl}posts/${postId}`);
   }
 
   addPost(post: any) {
-    this.httpClient.post<{ status: number, post: any }>(`${environment.nodeUrl}posts`, this.checkPostData(post))
+    this.httpClient.post<{ status: number, post: any }>(`${environment.apiUrl}posts`, this.checkPostData(post))
       .subscribe(() => {
         this.route.navigate(['/posts']);
       }, error => this.snackbar.showSnack(error.error.message, null));
   }
 
   updatePost(editedPost: any, postId) {
-    this.httpClient.patch(`${environment.nodeUrl}posts/${postId}`, this.checkPostData(editedPost, postId))
+    this.httpClient.patch(`${environment.apiUrl}posts/${postId}`, this.checkPostData(editedPost, postId))
       .subscribe(data => {
       }, error => console.log(error));
   }
@@ -82,6 +82,6 @@ export class PostService {
   }
 
   deletePostDb(id: string): Observable<any> {
-    return this.httpClient.delete(`${environment.nodeUrl}posts/${id}`);
+    return this.httpClient.delete(`${environment.apiUrl}posts/${id}`);
   }
 }
