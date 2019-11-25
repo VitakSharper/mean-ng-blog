@@ -32,18 +32,14 @@ export class PostService {
       .pipe(
         map((postData) => {
           return {
-            posts: postData.posts.map(post => {
-              return {
-                id: post._id,
-                ...post
-              };
-            }), maxPosts: postData.results
+            posts: postData.posts.map(post => ({id: post._id, ...post})),
+            maxPosts: postData.results
           };
         })
       )
       .subscribe(posts => {
         this.posts = posts.posts;
-        this.observePosts.next({posts: [...this.posts], maxPosts: posts.maxPosts});
+        this.observePosts.next({posts: posts.posts, maxPosts: posts.maxPosts});
       }, error => console.log(error));
   }
 

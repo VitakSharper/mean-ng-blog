@@ -2,8 +2,9 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Post} from '../../helpers/interfaces';
 import {PostService} from '../post.service';
 import {Subscription} from 'rxjs';
-import {PageEvent} from '@angular/material';
+import {MatDialog, PageEvent} from '@angular/material';
 import {AuthService} from '../../auth/auth.service';
+import {DeleteMsgDialogComponent} from '../../helpers/delete-msg-dialog.component';
 
 @Component({
   selector: 'app-post-list',
@@ -23,9 +24,12 @@ export class PostListComponent implements OnInit, OnDestroy {
   pageSizeOptions = [5, 10, 20];
   pageIndex = 1;
 
+  private dialogRef: any;
+
   constructor(
     private postService: PostService,
-    private authService: AuthService
+    private authService: AuthService,
+    private dialog: MatDialog
   ) {
   }
 
@@ -37,7 +41,6 @@ export class PostListComponent implements OnInit, OnDestroy {
       }, error => console.log(error));
 
     this.isLoading = true;
-    this.getPosts();
     this.postsSub = this.postService.getPostsObserver()
       .subscribe((postsData: { posts: any, maxPosts: number }) => {
         this.posts = postsData.posts;
@@ -47,6 +50,7 @@ export class PostListComponent implements OnInit, OnDestroy {
         console.log(error);
         this.isLoading = false;
       });
+    this.getPosts();
 
   }
 
@@ -55,8 +59,19 @@ export class PostListComponent implements OnInit, OnDestroy {
   }
 
   onDelPost(id: string) {
-    this.postService.deletePostDb(id).subscribe(() => {
-      this.getPosts();
+    const postTitle = this.posts.find(p => p.id === id).title;
+    this.dialogRef = this.dialog.open(DeleteMsgDialogComponent, {
+      data: {
+        postTitle
+      }
+    });
+
+    this.dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.postService.deletePostDb(id).subscribe(() => {
+          this.getPosts();
+        });
+      }
     });
   }
 

@@ -8,7 +8,8 @@ exports.getPosts = catchAsync(async (req, res) => {
     .paginate()
     .sort();
 
-  const posts = await features.queryDb;
+  const posts = await features.queryDb.select('-__v');
+
   const postCount = await Post.countDocuments();
   // const posts = await Post.find().sort('-updatedAt').select('-__v');
   res.status(200).json({

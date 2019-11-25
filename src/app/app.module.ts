@@ -9,9 +9,12 @@ import {MaterialModule} from './helpers/material/material.module';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HeaderComponent} from './navigation/header/header.component';
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {PostModule} from './posts/post/post.module';
 import {AuthModule} from './auth/auth/auth.module';
+import {ErrorInterceptor} from './helpers/error.interceptor';
+import {MsgDialogComponent} from './helpers/msg-dialog.component';
+import {DeleteMsgDialogComponent} from './helpers/delete-msg-dialog.component';
 
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -20,7 +23,9 @@ export function tokenGetter() {
 @NgModule({
   declarations: [
     AppComponent,
-    HeaderComponent
+    HeaderComponent,
+    MsgDialogComponent,
+    DeleteMsgDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -40,7 +45,10 @@ export function tokenGetter() {
       }
     })
   ],
-  providers: [],
+  providers: [
+    {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true}
+  ],
+  entryComponents: [MsgDialogComponent, DeleteMsgDialogComponent],
   // deprecated using @auth0/angular-jwt instead
   // providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],
   bootstrap: [AppComponent]

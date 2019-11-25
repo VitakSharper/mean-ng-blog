@@ -45,8 +45,6 @@ export class SignupComponent implements OnInit {
       this.authService.saveAuthToLocalstorage();
       this.snackbar.showSnack(`User ${this.authService.getCurrentUser().name} was successful created (●\'◡\'●)`, null);
       this.route.navigate(['/posts']);
-    }, error => {
-      this.snackbar.showSnack(error.error.message, null, {duration: 5000});
     });
   }
 }
