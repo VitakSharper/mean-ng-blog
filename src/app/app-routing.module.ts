@@ -3,11 +3,11 @@ import {Routes, RouterModule, PreloadAllModules} from '@angular/router';
 
 const routes: Routes = [
   {path: '', loadChildren: () => import('./posts/post/post.module').then(m => m.PostModule)},
-  {path: '', loadChildren: () => import('./auth/auth/auth.module').then(m => m.AuthModule)}
+  {path: 'auth', loadChildren: () => import('./auth/auth/auth.module').then(m => m.AuthModule)}
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {preloadingStrategy: PreloadAllModules})],
+  imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
 export class AppRoutingModule {

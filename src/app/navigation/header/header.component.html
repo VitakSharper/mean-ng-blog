@@ -12,8 +12,8 @@
   <span class="fill-remaining-space"></span>
 
   <mat-nav-list fxLayout *ngIf="!isAuth">
-    <a mat-list-item routerLinkActive="active-link" routerLink="/signup">Sigup</a>
-    <a mat-list-item routerLinkActive="active-link" routerLink="/login">Login</a>
+    <a mat-list-item routerLinkActive="active-link" routerLink="/auth/signup">Sigup</a>
+    <a mat-list-item routerLinkActive="active-link" routerLink="/auth/login">Login</a>
   </mat-nav-list>
 
   <mat-nav-list *ngIf="isAuth">
